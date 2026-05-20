@@ -14,27 +14,24 @@ def ask():
         return '', 200
     
     data = request.json
-    provider = data.get('provider')
-    prompt = data.get('prompt')
+    prompt = data.get('prompt', '')
     
-    if provider == 'openai':
-        headers = {
-            'Authorization': f'Bearer {OPENAI_KEY}',
-            'Content-Type': 'application/json'
-        }
-        payload = {
-            'model': 'gpt-3.5-turbo',
-            'messages': [{'role': 'user', 'content': prompt}],
-            'max_tokens': 1024,
-            'temperature': 0.7
-        }
-        try:
-            resp = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=payload, timeout=30)
-            return jsonify(resp.json())
-        except Exception as e:
-            return jsonify({'error': str(e)}), 500
+    headers = {
+        'Authorization': f'Bearer {OPENAI_KEY}',
+        'Content-Type': 'application/json'
+    }
+    payload = {
+        'model': 'gpt-3.5-turbo',
+        'messages': [{'role': 'user', 'content': prompt}],
+        'max_tokens': 1024,
+        'temperature': 0.7
+    }
     
-    return jsonify({'error': 'Unknown provider'}), 400
+    try:
+        resp = requests.post('https://api.openai.com/v1/chat/completions', headers=headers, json=payload, timeout=30)
+        return jsonify(resp.json())
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 8080))
