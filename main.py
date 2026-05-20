@@ -6,7 +6,7 @@ import requests
 app = Flask(__name__)
 CORS(app)
 
-OPENAI_KEY = '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'
+OPENAI_KEY = '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'
 
 @app.route('/ask', methods=['POST', 'OPTIONS'])
 def ask():
